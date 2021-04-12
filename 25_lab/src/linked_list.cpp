@@ -7,11 +7,11 @@ List duplicate(List &list) {
 
 void print(List &list) {
     ListNode *print_list = list.head;
-    while (print_list->next != nullptr) {
+    while (print_list != nullptr) {
         std::cout << print_list->data << "->";
         print_list = print_list->next;
     }
-    std::cout << print_list->data << "->[x]" << std::endl;
+    std::cout << "[x]" << std::endl;
 }
 
 unsigned int size(List &list) {
@@ -20,11 +20,9 @@ unsigned int size(List &list) {
 
 
 void delete_list(List &list) {
-    {
         // решение тут
         list.head = nullptr;
     }
-}
 
 
 void add(List &list, int value) {
@@ -36,12 +34,14 @@ void add(List &list, int value) {
 bool compare(List &list_a, List &list_b) {
     ListNode *copy_a = list_a.head;
     ListNode *copy_b = list_b.head;
-    while (copy_a->next != nullptr && copy_b->next != nullptr) {
+    while (copy_a && copy_b) {
         if (copy_a->data != copy_b->data)
             return false;
         copy_a = copy_a->next;
         copy_b = copy_b->next;
     }
+    if ((copy_a && !copy_b) || (copy_b && !copy_a))
+        return false;
     return true;
 }
 
@@ -49,21 +49,20 @@ List merge(List &list_a, List &list_b) {
     ListNode *copy_a = list_a.head;
     ListNode *copy_b = list_b.head;
     List list_l{};
-    while (copy_a != nullptr || copy_b != nullptr) {
-        if (copy_a->data < copy_b->data && copy_a != nullptr && copy_b != nullptr) {
+    while (copy_a || copy_b) {
+        if (copy_a->data < copy_b->data && copy_a && copy_b) {
             add(list_l, copy_a->data);
             copy_a = copy_a->next;
         }
-        if (copy_b->data < copy_a->data && copy_b != nullptr && copy_a != nullptr) {
-            add(list_l, copy_b->data);
-            copy_b = copy_b->next;
-
-        }
-        if (copy_a == nullptr && copy_b != nullptr) {
+        if (copy_b->data < copy_a->data && copy_b && copy_a) {
             add(list_l, copy_b->data);
             copy_b = copy_b->next;
         }
-        if (copy_b == nullptr && copy_a != nullptr) {
+        if (!copy_a && copy_b) {
+            add(list_l, copy_b->data);
+            copy_b = copy_b->next;
+        }
+        if (!copy_b && copy_a) {
             add(list_l, copy_a->data);
             copy_a = copy_a->next;
         }
